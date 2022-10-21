@@ -19,26 +19,26 @@ The Auto Shutdown Tools Windows service requires the Visual C++ Runtime to be in
 ### Installation
 
 The Auto Shutdown Tools Windows service is installed using the command:
-'''
+```
 AutoShutdownToolsService.exe install
-'''
+```
 
 The Auto Shutdown Tools UI can be run using a scheduled task when a user logs in:
-'''
+```
 schtasks /create /sc onlogon /tn AutoShutdownToolsUI /ru "BUILTIN\Administrators" /tr C:\Path\To\AutoShutdownToolsUI.exe /it /rl highest /delay 0001:00
-'''
+```
 
 ### Registry Settings
 
 The timeers can be modified at runtime using registry entries. The default values are:
-'''
+```
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\AutoShutdownToolsService\Parameters]
 "Timeout"=dword:0000003C
 "ShutdownOnStop"=dword:00000000
 "ActiveTimeout"=dword:01877400
 "ActiveTimeoutIncrement"=dword:0036EE80
 "DebugLogging"=dword:00000000
-'''
+```
 
 | Timer | Description | Registry DWORD | Time |
 | --- | --- | --- | --- |
@@ -53,9 +53,9 @@ The Linux version of the Auto Shutdown Tools are a shell script that is run as a
 ### Manual Installation
 
 To install the Auto Shutdown Tools on Linux run: 
-'''
+```
 AutoShutdownTools.sh
-'''
+```
 
 This script will store the script in /usr/bin/AutoShutdownTools.sh and create the systemd file /lib/systemd/system/AutoShutdownTools.service.
 These are stored base64 encoded in the installation script.
@@ -69,7 +69,7 @@ The Auto Shutdown Tools on Linux can also easily be deployed as part of an ARM t
 ## Deallocating Stopped VMs in Azure
 
 An example runbook to find and deallocate stopped VMs in Azure:
-'''
+```
 try
 {
     Connect-AzAccount -Identity
@@ -90,4 +90,4 @@ if($AzVMs) {
         }
    }
 }
-'''
+```
