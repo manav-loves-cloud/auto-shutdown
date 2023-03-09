@@ -294,11 +294,11 @@ void WINAPI MainWorkerThread(LPVOID lpParam)
 	DWORD	dwRetVal;							// Store the return value
 	HKEY	hKey;								// Store the handle to the open registry key
 	DWORD	dwSize = sizeof(DWORD);				// Store the size of the registry value
-	long	nIdleTimeout = 60;					// Default timeout value (minutes)
+	long	nIdleTimeout = 15;					// Default timeout value (minutes)
 	long	nIdleCounter;						// Idle counter
-	long	nActivityWait = 15;					// Defeault time to wait for a reponse (minutes)
-	long	nActiveTimeout = 28800000;			// Default timeout (milliseconds) 8 hours / 480 mins / 28,800 seconds
-	long	nActiveTimeoutIncrement = 3600000;	// How much to increment to the active time timeout by (milliseconds) 60 minutes / 3,600 seconds
+	long	nActivityWait = 5;					// Defeault time to wait for a reponse (minutes)
+	long	nActiveTimeout = 600000;			// Default timeout (milliseconds) 8 hours / 480 mins / 28,800 seconds
+	long	nActiveTimeoutIncrement = 600000;	// How much to increment to the active time timeout by (milliseconds) 60 minutes / 3,600 seconds
 	bool	bShutdownOnStop = false;			// Shutdown on stop
 	bool	bDebugLogging = true;				// Log debug messages to file
 
@@ -321,6 +321,7 @@ void WINAPI MainWorkerThread(LPVOID lpParam)
 		long	nRegActiveTimeout;					// Active timeout value in registry
 		long	nRegActiveTimeoutIncrement;			// Active timeout increment in registry
 		long	nRegShutdownOnStop;					// Shutdown on stop value in registry
+		long	nRegActivityWait;
 		long	nDebugLog = 0;
 
 		// Check for a debug logging registry value - 0 = false, >0 = true
@@ -353,6 +354,19 @@ void WINAPI MainWorkerThread(LPVOID lpParam)
 			if (bDebugLogging)
 				LogToFile(L"Using timeout from registry");
 			nIdleTimeout = nRegIdleTimeout;
+		}
+		// Check for an ActivityWait registry value - in minutes
+		dwRetVal = RegQueryValueExW(hKey, L"ActivityWait", NULL, NULL, (LPBYTE)&nRegActivityWait, &dwSize);
+		if (dwRetVal != ERROR_SUCCESS)
+		{
+			if (bDebugLogging)
+				LogToFile(L"Unable to read ActivityWait, using default value");
+		}
+		else
+		{
+			if (bDebugLogging)
+				LogToFile(L"Using Activity Wait from registry");
+			nActivityWait = nRegActivityWait;
 		}
 
 		// Check for an active timeout registry value - in milliseconds (tested against boot time)
@@ -469,7 +483,7 @@ void WINAPI MainWorkerThread(LPVOID lpParam)
 		}
 
 		// Check if the active timeout has been reached
-		if ((long)GetTickCount() >= nActiveTimeout)
+		if ((long)GetTickCount64() >= nActiveTimeout)
 		{
 			if (bDebugLogging)
 				LogToFile(L"Active Timeout Reached");

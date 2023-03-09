@@ -102,7 +102,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				if (nRegTimeoutState > 0)
 				{
 					// Display the dialog box to see if the computer is still being used
-					if (MessageBox(NULL, L"If you are still using this computer please click OK.\r\rIf you do not click OK this computer will shudown\rin 15 minutes.", L"Auto Shutdown Tools UI", MB_OK | MB_ICONSTOP | MB_SYSTEMMODAL | MB_SETFOREGROUND | MB_TOPMOST) == IDOK)
+					if (MessageBox(NULL, L"If you are still using this VM please click OK.\r\rIf you do not click OK this VM will shutdown\rin 5 minutes.", L"Auto Shutdown Tools UI", MB_OK | MB_ICONSTOP | MB_SYSTEMMODAL | MB_SETFOREGROUND | MB_TOPMOST) == IDOK)
 					{
 						dwValue = 1;
 						dwRetVal = RegSetValueEx(hKey, L"Active", 0, REG_DWORD, (const BYTE*)&dwValue, sizeof(dwValue));
